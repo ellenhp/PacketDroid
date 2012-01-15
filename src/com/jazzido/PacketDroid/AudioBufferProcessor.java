@@ -126,30 +126,26 @@ public class AudioBufferProcessor extends Thread {
 	public class AudioIn extends Thread {
 		private AudioRecord recorder;
 		
-		private short[][] buffers = new short[256][8192];
+		private short[][] buffers = new short[16][8192];
 
 		public AudioIn() {
 			super("AudioIn");
 			android.os.Process
 					.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
-			recorder = new AudioRecord(AudioSource.MIC, 22050,
-					AudioFormat.CHANNEL_IN_MONO,
-					AudioFormat.ENCODING_PCM_16BIT, 16384);
 		}
 
 		@Override
 		public void run() {
 			
 			int ix = 0;
+			recorder = new AudioRecord(AudioSource.MIC, 22050,
+					AudioFormat.CHANNEL_IN_MONO,
+					AudioFormat.ENCODING_PCM_16BIT, 16384);
 
 			try {
 				recorder.startRecording();
 
-				while (true) {
-					if (recorder.getRecordingState() == AudioRecord.RECORDSTATE_STOPPED) {
-						Thread.sleep(100);
-						continue;
-					}
+				while (recorder.getRecordingState() != AudioRecord.RECORDSTATE_STOPPED) {
 					int nRead = 0;
 					short[] buffer = buffers[ix++ % buffers.length];
 
