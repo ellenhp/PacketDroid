@@ -11,9 +11,8 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder.AudioSource;
 import android.util.Log;
 
-import net.ab0oo.aprs.parser.Parser;
-
 public class AudioBufferProcessor extends Thread {
+	static final String LOG_TAG = "APRSdroid.AfskABP";
 
 	private AudioIn audioIn = new AudioIn();
 	private PacketCallback callback;
@@ -76,6 +75,7 @@ public class AudioBufferProcessor extends Thread {
 	
 	@Override
 	public void run() {
+		Log.d(LOG_TAG, "thread started");
 		if (!inited) { inited = true; init(); } // init native demodulators
 		if (!audioIn.isAlive()) audioIn.start();
 		
@@ -100,7 +100,7 @@ public class AudioBufferProcessor extends Thread {
 	
 	
 	void decode(short[] s) {
-		// Log.d(PacketDroidActivity.LOG_TAG, "CALLBACK!: " + s.length);
+		// Log.d(LOG_TAG, "CALLBACK!: " + s.length);
 		for (int i = 0; i < s.length; i++) {
 			if (writeAudioBuffer) {
 				try {
@@ -159,20 +159,20 @@ public class AudioBufferProcessor extends Thread {
 					// process(buffer);
 				}
 			} catch (Throwable x) {
-				Log.w(PacketDroidActivity.LOG_TAG, "Error reading audio", x);
+				Log.w(LOG_TAG, "Error reading audio", x);
 			} 
 		}
 
 	
 		private void close() {
 			if (recorder != null) recorder.stop();
-			Log.d(PacketDroidActivity.LOG_TAG, "AudioIn: close");
+			Log.d(LOG_TAG, "AudioIn: close");
 		}
 
 	}
 
 	public void callback(byte[] data) {
-		Log.d(PacketDroidActivity.LOG_TAG, "called callback: " + new String(data));
+		Log.d(LOG_TAG, "called callback: " + new String(data));
 		callback.received(data);
 	}
 }
