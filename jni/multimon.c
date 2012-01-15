@@ -69,12 +69,9 @@ void Java_com_jazzido_PacketDroid_AudioBufferProcessor_init(JNIEnv *env, jobject
   unsigned int i;
   unsigned int overlap = 0;
 
-  LOGD("YESYESYES I'm on init");
-
-  LOGD("NUMDEMOD: %d", NUMDEMOD);
+  LOGD("multimon library init");
 
   for (i = 0; i < NUMDEMOD; i++) {
-    LOGD(" DEM: %s", dem[i]->name);
     memset(dem_st+i, 0, sizeof(dem_st[i]));
     dem_st[i].dem_par = dem[i];
     if (dem[i]->init)
@@ -138,14 +135,14 @@ jobject *abp_global;
 void Java_com_jazzido_PacketDroid_AudioBufferProcessor_processBuffer(JNIEnv *env, jobject object, jfloatArray fbuf, jint length) {
   env_global = env;
   abp_global = object;
-  LOGD("ProcessBuffer NATIVE");
+  //LOGD("ProcessBuffer NATIVE");
   jfloat *jfbuf = (*env)->GetFloatArrayElements(env, fbuf, 0);
   process_buffer(jfbuf, length);
   (*env)->ReleaseFloatArrayElements(env, fbuf, jfbuf, 0);
 }
 
 void send_frame_to_java(unsigned char *bp, unsigned int len) {
-  LOGD("send_frame_to_java NATIVE");
+  //LOGD("send_frame_to_java NATIVE");
 
   // prepare data array to pass to callback
   jbyteArray data = (*env_global)->NewByteArray(env_global, len);
