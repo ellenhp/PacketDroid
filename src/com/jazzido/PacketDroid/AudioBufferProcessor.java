@@ -138,7 +138,7 @@ public class AudioBufferProcessor extends Thread {
 		public void run() {
 			
 			int ix = 0;
-			recorder = new AudioRecord(AudioSource.MIC, 22050,
+			recorder = new AudioRecord(AudioSource.MIC, 8000,
 					AudioFormat.CHANNEL_IN_MONO,
 					AudioFormat.ENCODING_PCM_16BIT, 16384);
 
