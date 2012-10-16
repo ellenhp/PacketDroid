@@ -101,6 +101,7 @@ public class AudioBufferProcessor extends Thread {
 	
 	void decode(short[] s) {
 		// Log.d(LOG_TAG, "CALLBACK!: " + s.length);
+		short max = 0;
 		for (int i = 0; i < s.length; i++) {
 			if (writeAudioBuffer) {
 				try {
@@ -112,8 +113,13 @@ public class AudioBufferProcessor extends Thread {
 				}
 			}
 			fbuf[fbuf_cnt++] = s[i] * (1.0f/32768.0f);
+			if (max < s[i])
+			       max = s[i];
+			else if (max < -s[i])
+				max = (short)-s[i];
 		}
 		
+		callback.peak(max);
 		
 		if (fbuf_cnt > overlap) {
 			processBuffer(fbuf, fbuf_cnt - overlap);
