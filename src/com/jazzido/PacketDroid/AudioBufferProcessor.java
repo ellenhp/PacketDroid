@@ -94,7 +94,12 @@ public class AudioBufferProcessor extends Thread {
 	}
 	
 	public void stopRecording() {
-		audioIn.close();
+		try {
+			audioIn.close();
+		} catch (IllegalStateException e) {
+			// "IllegalStateException: stop() called on an uninitialized AudioRecord."
+			// ignore this ;)
+		}
 		queue.clear();
 	}
 	
